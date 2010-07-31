@@ -46,7 +46,7 @@ win(File) ->
     Width   = 500, Ht = 400,
     Win     = swTopLevel:make(Display, Width, Ht, ?bg),
     Text    = swErlPoint:make(Win, 10,10, Width-20, Ht-20,1,?azure),
-    Lines = read_file(File),
+    _Lines = read_file(File),
     %% -adobe-courier-bold-r-normal--12-120-75-75-m-70-iso8859-1
     Re = "-*-*-*-*-*-*-*-*-*-*-*-*-iso8859-1",
     {ok, F} = xDo(Display, eListFonts(100000, Re)),
@@ -68,7 +68,8 @@ page() ->
      {rectangle, code, 45,167,200,100}].
 
 read_file(F) ->
-    {ok, Bin} = file:read_file(F).
+    {ok, Bin} = file:read_file(F),
+    {ok, Bin}.
 
 loop(State) ->
     receive
@@ -80,7 +81,7 @@ loop(State) ->
 	    io:format("Pressed:~p=>~p~n",[Args,Cmd]),
 	    State1 = key_pressed(Cmd, State),
 	    loop(State1);
-	{resized, Width, Ht} ->
+	{resized, _Width, _Ht} ->
 	    loop(State);
 	Any ->
 	    io:format("example20 received:~p~n",[Any]),
@@ -90,5 +91,5 @@ loop(State) ->
 key_pressed({_,_, Mod, Cmd}, State) ->
     handle_key(Mod, Cmd, State).
 
-handle_key(none, {cmd, right}, State) ->
+handle_key(none, {cmd, right}, _State) ->
     a.

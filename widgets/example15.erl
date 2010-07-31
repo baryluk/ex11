@@ -29,7 +29,7 @@ win() ->
     foreach(fun({I,[I1,I2,I3,I4]}) ->
 		    io:format("I=~p ~s ~s ~s ~s~n",[I,f(I1),f(I2),f(I3),f(I4)])
 	    end, Val),
-    Win  =  swTopLevel:make(Display,800, 600, ?bg),
+    _Win  =  swTopLevel:make(Display,800, 600, ?bg),
     loop().
 
 loop() ->

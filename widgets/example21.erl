@@ -145,24 +145,27 @@ delete(B) ->
     debug(delete, B),
     B.
     
-insert_line(B = #b{l1=L1,l2=L2,flag=F,b2=B2}) ->
+insert_line(B = #b{l1=L1,l2=_L2,flag=_F,b2=B2}) ->
     Line1 = {true,L1},
     B#b{l1=[],b2=B2++[Line1]};
 insert_line(B) ->
     debug(insert_line, B).
 
-debug(_, B) ->
-    B;
+-ifdef(debug).
 debug(Tag,B= #b{b1=B1,b2=B2,flag=F,l1=L1,l2=L2,a1=A1,a2=A2}) ->
     io:format("no match:~p~n ",[Tag]),
     io:format("b1=~p~nb2=~p~n(F,L1,L2)=(~p,~s,~s)~na2=~p~na1=~p~n",
 	      [B1,B2,F,L1,L2,A2,A1]),
     B.
-    
+-else.
+debug(_, B) ->
+    B.
+-endif.
+
 right(B = #b{l1=L1,l2=[H|L2x]}) ->
     L1x = L1 ++ [H],
     B#b{l1=L1x,l2=L2x};
-right(B = #b{flag=F,l1=L1,l2=[],b2=B2,a2=[{Flag,T}|A2]}) ->
+right(_B = #b{flag=F,l1=L1,l2=[],b2=B2,a2=[{Flag,T}|A2]}) ->
     Line = {F,L1},
     #b{l1=[],l2=T,flag=Flag,b2=B2++[Line],a2=A2};
 right(B) -> B.

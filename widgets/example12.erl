@@ -22,7 +22,8 @@ start() ->
 
 win() ->
     Val = form(25, ["Title", "Keywords", "Subject",
-		    "Author", "Date", "Link"]).
+		    "Author", "Date", "Link"]),
+	Val.
 
 form(Chars, Data) ->
     S = self(),

@@ -35,7 +35,7 @@ win() ->
 	end),
     loop(Win).
 
-for(I,Max,Step, F) when I >= Max ->
+for(I, Max, _Step, _F) when I >= Max ->
     true;
 for(I, Max, Step, F) ->
     F(I),

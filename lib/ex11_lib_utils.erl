@@ -123,9 +123,9 @@ all(_,[]) -> [].
 %% ----------------------------------
 %% Encode/Decode 16/32 bits integers
 
-i16(Int) when binary(Int) ->
+i16(Int) when is_binary(Int) ->
     i16(binary_to_list(Int));
-i16(Int)  when integer(Int) -> 
+i16(Int)  when is_integer(Int) -> 
     [(Int bsr  8) band 255,Int band 255];
 i16([X1,X0]) ->
     i16(X1,X0).
@@ -133,9 +133,9 @@ i16([X1,X0]) ->
 i16(X1,X0) ->
     (X1 bsl 8) bor X0.
 
-i32(Int) when binary(Int) ->
+i32(Int) when is_binary(Int) ->
     i32(binary_to_list(Int));
-i32(Int)  when integer(Int) -> 
+i32(Int)  when is_integer(Int) -> 
     [(Int bsr 24) band 255,
      (Int bsr 16) band 255,
      (Int bsr  8) band 255,
@@ -148,12 +148,12 @@ i32(X1,X2,X3,X4) ->
 
 %% Deal with the byte order
     
-b16(?LSB_BYTEORDER,I) when integer(I) -> reverse(i16(I));
-b16(?LSB_BYTEORDER,L) when list(L)    -> i16(reverse(L));
+b16(?LSB_BYTEORDER,I) when is_integer(I) -> reverse(i16(I));
+b16(?LSB_BYTEORDER,L) when is_list(L)    -> i16(reverse(L));
 b16(?MSB_BYTEORDER,I)                 -> i16(I).
 
-b32(?LSB_BYTEORDER,I) when integer(I) -> reverse(i32(I));
-b32(?LSB_BYTEORDER,L) when list(L)    -> i32(reverse(L));
+b32(?LSB_BYTEORDER,I) when is_integer(I) -> reverse(i32(I));
+b32(?LSB_BYTEORDER,L) when is_list(L)    -> i32(reverse(L));
 b32(?MSB_BYTEORDER,I)                 -> i32(I).
     
 

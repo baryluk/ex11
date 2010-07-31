@@ -54,7 +54,7 @@
 	 max_keycode          % maximum defined keycode 
 	}).
 
--define(IS_DISPLAY(D), record(D,display)).
+-define(IS_DISPLAY(D), is_record(D,display)).
 
 %% Access macros
 -define(ROOT_DEPTH(D, S),

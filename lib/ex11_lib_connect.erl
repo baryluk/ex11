@@ -310,7 +310,7 @@ get_connect_reply(Fd, Bin0) ->
     end.
 
 my_concat_binary(<<>>, B) -> B;
-my_concat_binary(B1, B2)  -> concat_binary([B1, B2]).
+my_concat_binary(B1, B2)  -> list_to_binary([B1, B2]).
 
 recv({unix, S}) ->
     receive

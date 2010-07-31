@@ -103,7 +103,7 @@ loop(Canvas, Map, W, H, W1, H1) ->
 	    loop(Canvas, Map, W, H, W1, H1);
 	{reconfigure, {W2, H2}} ->
 	    loop(Canvas, Map, W, H, W2, H2);	    
-	Any ->
+	_Any ->
 	    loop(Canvas, Map, W, H, W1, H1)
     after 250 ->
 	    if W =/= W1, H =/= H1 ->

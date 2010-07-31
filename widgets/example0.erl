@@ -88,6 +88,6 @@ add_examples(Win, X, Y, Width, [{Txt, Fun}|T]) ->
     But = swButton:make(Win, X, Y, Width, 30, ?yellow, Txt),
     But ! {onClick, fun(_) -> Fun() end},
     add_examples(Win, X, Y+35, Width, T);
-add_examples(Win, X, Y, Width, []) ->
+add_examples(_Win, _X, Y, _Width, []) ->
     Y.
 

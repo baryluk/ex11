@@ -146,7 +146,7 @@ code_change(OldVsn, State, Extra) ->
 %% Thus, this code can't be preloaded or interpreted.
 load_path() ->
     case code:is_loaded(?MODULE) of
-	{file,File} when list(File) -> 
+	{file,File} when is_list(File) -> 
 	    filename:dirname(File) ++ "../src";
 	_ -> 
 	    Emsg = "~w: Can't find path to load driver from !~n",

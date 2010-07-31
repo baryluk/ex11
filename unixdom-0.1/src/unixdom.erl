@@ -236,15 +236,15 @@ handle_cast(Msg, State) ->
 %%          {noreply, State, Timeout} |
 %%          {stop, Reason, State}            (terminate/2 is called)
 %%----------------------------------------------------------------------
-handle_info({unixdom, Port, Data}, State) when port(Port) ->
+handle_info({unixdom, Port, Data}, State) when is_port(Port) ->
     %% Forward Data to our owner proc.
     State#state.owner ! {unixdom, self(), Data},
     {noreply, State};    
-handle_info({closed, Port}, State) when port(Port) ->
+handle_info({closed, Port}, State) when is_port(Port) ->
     %% Forward Data to our owner proc.
     State#state.owner ! {unixdom, self(), closed},
     {noreply, State};    
-handle_info({unixdom_reply, Port, {error, closed}}, State) when port(Port) ->
+handle_info({unixdom_reply, Port, {error, closed}}, State) when is_port(Port) ->
     %% Forward Data to our owner proc.
     State#state.owner ! {unixdom, self(), closed},
     {noreply, State};    
@@ -279,7 +279,7 @@ code_change(OldVsn, State, Extra) ->
 %% Thus, this code can't be preloaded or interpreted.
 load_path() ->
     case code:is_loaded(?MODULE) of
-        {file,File} when list(File) ->
+        {file,File} when is_list(File) ->
             filename:dirname(File) ++ "/../src";
         _ ->
             Emsg = "~w: Can't find path to load driver from !~n",
@@ -418,7 +418,7 @@ do_setopts(Port, OptList) ->
 do_listen(Port, Path, OptList) ->
     %% XXX Is this being too defensive?
     case file:read_file_info(Path) of
-	{ok, Info} when record(Info, file_info),
+	{ok, Info} when is_record(Info, file_info),
 			Info#file_info.type == other ->
 	    case lists:member(unlink_sock, OptList) of
 		true ->
@@ -479,7 +479,7 @@ do_accept(Port, State) ->
     case do_getix(Port) of
 	{ok, IX} ->
 	    case open_port({spawn, ?DRV_NAME}, []) of
-		NewPort when port(NewPort) ->
+		NewPort when is_port(NewPort) ->
 		    case ctl_cmd(NewPort, ?UNIXDOM_REQ_ACCEPT, ?int32(IX)) of
 			{ok, []} ->
 			    do_accept2(NewPort, State);
@@ -556,7 +556,7 @@ enc_opt({active, true}) ->
 enc_opt({active, false}) ->
     %% XXX "once" mode not implemented
     [?UNIXDOM_OPT_ACTIVE, ?UNIXDOM_OPT_ACTIVE_FALSE];
-enc_opt({backlog, Size}) when integer(Size), Size >= 0 ->
+enc_opt({backlog, Size}) when is_integer(Size), Size >= 0 ->
     [?UNIXDOM_OPT_BACKLOG, ?int32(Size)];
 enc_opt(unlink_sock) ->
     ?UNIXDOM_OPT_IGNORE;			% Option not handled by driver

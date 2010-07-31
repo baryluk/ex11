@@ -76,9 +76,7 @@
 	 xPen/3,
 	 xPen/4,
 	 xSendMeAllEvents/2,
-	 xSetInputFocus/1,
 	 xStart/1,
-	 xGC/2,
 	 cmd/2, 
 	 get_display/2,
 	 get_root_of_screen/2,
@@ -608,7 +606,7 @@ eFillPoly(Drawable, GC, Shape, CoordMode, Points) ->
 		     origin    -> 0;
 		     previous  -> 1
 		 end,
-    X = concat_binary(Points),
+    X = list_to_binary(Points),
     req(69, 0, <<Drawable:32, GC:32, ShapeOpCode:8,
 		ModeOpCode:8,0:16,X/binary>>).
 
@@ -648,17 +646,17 @@ eOpenFont(Fid, Str) ->
     req(45, <<Fid:32, Len:16,0:16, B/binary>>).
 
 ePolyArc(Drawable, Gc, Arcs) ->
-    X = concat_binary(Arcs),
+    X = list_to_binary(Arcs),
     req(68, <<Drawable:32, Gc:32, X/binary>>).
     
 
 ePolyFillArc(Drawable, Gc, Arcs) ->
-    X = concat_binary(Arcs),
+    X = list_to_binary(Arcs),
     req(71, <<Drawable:32, Gc:32, X/binary>>).
     
 
 ePolyFillRectangle(Drawable, Gc, Rects) ->
-    X = concat_binary(Rects),
+    X = list_to_binary(Rects),
     req(70, <<Drawable:32, Gc:32, X/binary>>).
 
 ePolyLine(Drawable, GC, CoordMode, Points) ->
@@ -666,11 +664,11 @@ ePolyLine(Drawable, GC, CoordMode, Points) ->
 		     origin    -> 0;
 		     previous  -> 1
 		 end,
-    X = concat_binary(Points),
+    X = list_to_binary(Points),
     req(65, ModeOpCode, <<Drawable:32, GC:32, X/binary>>).
 
 ePolyRectangle(Drawable, Gc, Rects) ->
-    X = concat_binary(Rects),
+    X = list_to_binary(Rects),
     req(67, <<Drawable:32, Gc:32, X/binary>>).
 
 ePolyText8(Drawable, GC, X, Y, Str) ->
@@ -771,9 +769,9 @@ pad_size(E) -> (4 - (E rem 4)) rem 4.
 
 add_pad(Data) -> pad(Data).
     
-pad(Data) when binary(Data) -> 
+pad(Data) when is_binary(Data) -> 
     pad_0(pad_size(size(Data)));
-pad(Data) when list(Data) -> 
+pad(Data) when is_list(Data) -> 
     pad_0(pad_size(length(Data))).
 
 pad_0(0) -> <<>>;
@@ -1046,7 +1044,7 @@ encode([H|T], L, V, Mask, Bin) ->
 encode([], [], V, _, Bin) ->
     R = reverse(Bin),
     %% io:format("V=~p bin=~p~n",[V, R]),
-    {V, concat_binary(R)};
+    {V, list_to_binary(R)};
 encode([], L, V, _, Bin) ->
     exit({badOptionIn,eCreateWindow,L}).
 
@@ -1224,7 +1222,7 @@ eParseEvent(motionNotify, <<6:8,_:88,Event:32,_:32,
     {Event, {State, EventX, EventY, RootX, RootY}}.
 
 
-xDo(Display, L) when list(L) -> map(fun(I) -> cmd(Display, I) end, L);
+xDo(Display, L) when is_list(L) -> map(fun(I) -> cmd(Display, I) end, L);
 xDo(Display, L)              -> cmd(Display, L).
 
 %% Make a temporary GC in the correct graphics context

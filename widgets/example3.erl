@@ -22,12 +22,12 @@ win() ->
     Display = xStart("3.2"),
     Win    = swTopLevel:make(Display, 350, 145, ?bg),
     Win ! {onClick, fun({_,X,Y,_,_}) -> io:format("Click ~p,~p~n",[X,Y]) end},
-    Label1  = swLabel:make(Win, 10, 10, 220, 30, 0, ?cornsilk, "First name:"),
+    _Label1  = swLabel:make(Win, 10, 10, 220, 30, 0, ?cornsilk, "First name:"),
     Entry1  = swEntry:make(Win, 140, 10, 120, "Peg leg"),
-    Label2  = swLabel:make(Win, 10, 60, 220, 30, 0, ?cornsilk, "Last name:"),
+    _Label2  = swLabel:make(Win, 10, 60, 220, 30, 0, ?cornsilk, "Last name:"),
     Entry2  = swEntry:make(Win, 140, 60, 120, "Loombucket"),
     Button  = swButton:make(Win, 10, 100, 120, 30, ?grey88, "Swap"),
-    Button ! {onClick, fun(X) -> 
+    Button ! {onClick, fun(_X) -> 
 			       Val1 = rpc(Entry1, read),
 			       Val2 = rpc(Entry2, read),
 			       Entry1 ! {set, Val2},

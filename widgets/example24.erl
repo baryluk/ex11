@@ -66,17 +66,7 @@ loop(Win, Cs) ->
 	    loop(Win, Cs)
     end.
 
-for(I,Max,Step, F) when I >= Max ->
+for(I, Max, _Step, _F) when I >= Max ->
     [];
 for(I, Max, Step, F) ->
     [F(I)|for(I+Step,Max,Step,F)].
-
-
-
-
-
-
-
-
-
-

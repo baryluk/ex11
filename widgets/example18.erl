@@ -9,8 +9,6 @@
 
 %% Color picker
 
--export([start/0]).
-
 %%% --------------------------------------------------------------------
 %%% Created: 2004-01-30 by joe@sics.se
 
@@ -44,7 +42,7 @@ make_page(Display, Buttons, Rows, Cols, Size, Gap) ->
     drawButtons(Win, Label, Buttons, 1, Cols, 10, 10, Size, Gap, Ht),
     loop(Display).
 
-drawButtons(Win, Label, [], _, _, _, _, _, _, _) ->
+drawButtons(_Win, _Label, [], _, _, _, _, _, _, _) ->
     true;
 drawButtons(Win, Label,[{Text,Val}|T], Max, Max, X, Y, Size, Gap, Ht) ->
     addButton(Win, Label, X, Y, Size, Val, Text),

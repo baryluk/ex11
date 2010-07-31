@@ -42,7 +42,7 @@ win() ->
 		{"Shorter", fun(_) -> Target ! {shorter, 5} end},
 		{"Where", fun(_) -> 
 				  Winfo = rpc(Target,winfo),
-				  #win{x=XX,y=YY} = Winfo,
+				  %#win{x=XX,y=YY} = Winfo,
 				  Str = lists:flatten(io_lib:format("~p",
 								    [Winfo])),
 				  LabelInfo ! {set, Str}

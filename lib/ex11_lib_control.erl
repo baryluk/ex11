@@ -275,7 +275,7 @@ loop(Client, Driver, Seq, Display, D0, FreeIds) ->
 		error ->
 		    %% silently drop this error
 		    void;
-		{ok, P} when pid(P) ->
+		{ok, P} when is_pid(P) ->
 		    %% its a managed window
 		    P ! {error, Res, Seq, Args}
 	    end,

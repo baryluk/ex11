@@ -46,7 +46,7 @@ start_link() ->
     {ok, Port}.
 
 %%% Normal return: ok
-stop(Sock) when port(Sock) ->
+stop(Sock) when is_port(Sock) ->
     Res = case catch erlang:port_close(Sock) of
 	      true                           -> ok;
 	      {'EXIT', {Reason, _Backtrace}} -> Reason
@@ -55,66 +55,66 @@ stop(Sock) when port(Sock) ->
     Res.
 
 %%% Normal return: {ok, lsb} | {ok, msb}
-test(Sock) when port(Sock) ->
+test(Sock) when is_port(Sock) ->
     do_test(Sock).
 
 %%% Normal return: {ok, Hash}
-knuthhash(Sock, Path) when port(Sock) ->
+knuthhash(Sock, Path) when is_port(Sock) ->
     do_knuthhash(Path, Sock).
 
 %%% Normal return: ok
-connect(Sock, Path, OptList) when port(Sock) ->
+connect(Sock, Path, OptList) when is_port(Sock) ->
     connect(Sock, Path, OptList, ?Timeout).
-connect(Sock, Path, OptList, Timeout) when port(Sock) ->
+connect(Sock, Path, OptList, Timeout) when is_port(Sock) ->
     do_connect(Path, OptList, Sock, Timeout).
 
 %%% Normal return: ok | {error, ErrnoAtom}
-send(Sock, Packet) when port(Sock) ->
+send(Sock, Packet) when is_port(Sock) ->
     send(Sock, Packet, ?Timeout).
-send(Sock, Packet, Timeout) when port(Sock) ->
+send(Sock, Packet, Timeout) when is_port(Sock) ->
     do_send_catch(Packet, Sock).
 
 %%% Normal return: {ok, Data} | {error, closed} | {error, ErrnoAtom}
-recv(Sock, Length) when port(Sock) ->
+recv(Sock, Length) when is_port(Sock) ->
     recv(Sock, Length, ?Timeout).
-recv(Sock, Length, Timeout) when port(Sock) ->
+recv(Sock, Length, Timeout) when is_port(Sock) ->
     do_recv(Length, Sock, Timeout).
 
 %%% Normal return: ok
-close(Sock) when port(Sock) ->
+close(Sock) when is_port(Sock) ->
     close(Sock, ?Timeout).
-close(Sock, Timeout) when port(Sock) ->
+close(Sock, Timeout) when is_port(Sock) ->
     do_close(Sock).
 
 %%% Normal return: ok
-setopts(Sock, OptList) when port(Sock) ->
+setopts(Sock, OptList) when is_port(Sock) ->
     setopts(Sock, OptList, ?Timeout).
-setopts(Sock, OptList, Timeout) when port(Sock) ->
+setopts(Sock, OptList, Timeout) when is_port(Sock) ->
     do_setopts(Sock, OptList).
 
 %%% Normal return: {ok, R}, R = OptValue | [OptValue, ...]
-getopts(Sock, OptList) when port(Sock) ->
+getopts(Sock, OptList) when is_port(Sock) ->
     getopts(Sock, OptList, ?Timeout).
-getopts(Sock, OptList, Timeout) when port(Sock) ->
+getopts(Sock, OptList, Timeout) when is_port(Sock) ->
     do_getopts(Sock, OptList, Timeout).
 
 %%% Normal return: ok
-listen(Sock, Path, OptList) when port(Sock) ->
+listen(Sock, Path, OptList) when is_port(Sock) ->
     listen(Sock, Path, OptList, ?Timeout).
-listen(Sock, Path, OptList, Timeout) when port(Sock) ->
+listen(Sock, Path, OptList, Timeout) when is_port(Sock) ->
     do_listen(Sock, Path, OptList).
 
 %%% Normal return: {ok, Sock} | {error, ErrnoAtom}
-accept(Sock) when port(Sock) ->
+accept(Sock) when is_port(Sock) ->
     accept(Sock, ?Timeout).
-accept(Sock, Timeout) when port(Sock) ->
+accept(Sock, Timeout) when is_port(Sock) ->
     do_accept(Sock, Timeout).
 
 %%% Normal return: ok | {error, eperm}
-controlling_process(Sock, NewOwner) when port(Sock), pid(NewOwner) ->
+controlling_process(Sock, NewOwner) when is_port(Sock), pid(NewOwner) ->
     do_controlling_process(Sock, NewOwner).
 
-getix(Sock) when port(Sock) ->					% For internal use only!
+getix(Sock) when is_port(Sock) ->					% For internal use only!
     gen_server:call(Sock, {getix}, ?Timeout).
 
 %%%----------------------------------------------------------------------
@@ -126,7 +126,7 @@ getix(Sock) when port(Sock) ->					% For internal use only!
 %% Thus, this code can't be preloaded or interpreted.
 load_path() ->
     case code:is_loaded(?MODULE) of
-        {file,File} when list(File) ->
+        {file,File} when is_list(File) ->
             filename:dirname(File) ++ "/../src";
         _ ->
             Emsg = "~w: Can't find path to load driver from !~n",
@@ -346,7 +346,7 @@ do_accept(Port, Timeout) ->
     case do_getix(Port) of
 	{ok, IX} ->
 	    case open_port({spawn, ?DRV_NAME}, []) of
-		NewPort when port(NewPort) ->
+		NewPort when is_port(NewPort) ->
 		    case ctl_cmd(NewPort, ?UNIXDOM_REQ_ACCEPT,
 				 <<IX:32, Timeout:32>>) of
 			{ok, []} ->
@@ -427,11 +427,11 @@ unixdom_sync_input(Sock, Owner, Flag) ->
             Owner ! {unixdom_reply, Sock, Msg},
             unixdom_sync_input(Sock, Owner, Flag);
 	%% XXX Debugging clauses
-	T when tuple(T), element(1, T) == unixdom ->
+	T when is_tuple(T), element(1, T) == unixdom ->
 	    io:format("XXXYYYZZZ Hey, got unixdom-related msg T = ~w\n", [T]),
             Owner ! T,
             unixdom_sync_input(Sock, Owner, Flag);
-	T when tuple(T), element(1, T) == unixdom_reply ->
+	T when is_tuple(T), element(1, T) == unixdom_reply ->
 	    io:format("XXXYYYZZZ Hey, got unixdom-related msg T = ~w\n", [T]),
             Owner ! T,
             unixdom_sync_input(Sock, Owner, Flag)
@@ -439,14 +439,14 @@ unixdom_sync_input(Sock, Owner, Flag) ->
             Flag
     end.
 
-do_getopts(Sock, Opt, Timeout) when atom(Opt) ->
+do_getopts(Sock, Opt, Timeout) when is_atom(Opt) ->
     case getopts(Sock, [Opt]) of
 	{ok, [{_, Value}]} ->
 	     {ok, Value};
 	Error ->
 	    Error
     end;
-do_getopts(Sock, OptList, Timeout) when list(OptList) ->
+do_getopts(Sock, OptList, Timeout) when is_list(OptList) ->
     Req = encode_opts_req(OptList),
     case ctl_cmd(Sock, ?UNIXDOM_REQ_GETOPTS, Req) of
 	{ok, Res} ->
@@ -497,7 +497,7 @@ enc_opt({active, true}) ->
 enc_opt({active, false}) ->
     %% XXX "once" mode not implemented
     [?UNIXDOM_OPT_ACTIVE, ?UNIXDOM_OPT_ACTIVE_FALSE];
-enc_opt({backlog, Size}) when integer(Size), Size >= 0 ->
+enc_opt({backlog, Size}) when is_integer(Size), Size >= 0 ->
     [?UNIXDOM_OPT_BACKLOG, <<Size:32>>];
 enc_opt(unlink_sock) ->
     ?UNIXDOM_OPT_IGNORE;			% Option not handled by driver
@@ -517,7 +517,7 @@ enc_opt_req_only(unlink_sock) ->
 enc_opt_req_only(Bogus) ->
     ?UNIXDOM_OPT_IGNORE.
 
-binify(T) when binary(T) ->
+binify(T) when is_binary(T) ->
     T;
-binify(T) when list(T) ->
+binify(T) when is_list(T) ->
     list_to_binary(T).

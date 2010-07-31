@@ -54,7 +54,7 @@ join(Text, ScrollBar, Max) ->
     %%          0            = A*0 + B
     %%         MaxLine-MaxHt = A*Max
     %%
-    B = 0,
+    _B = 0,
     A = (MaxLines -  MaxHt)/Max,
     ScrollBar ! {onMove,
 		 fun(I) ->

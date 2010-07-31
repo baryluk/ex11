@@ -54,7 +54,7 @@ get_lines([{X,Y}|T], Lns) ->
 get_lines([], Lns) ->
     Lns.
 
-get_line(X, Y, [], L) ->
+get_line(_X, _Y, [], L) ->
     {L, []};
 get_line(X, Y, [{X1,Y1}=H|T]=All, L) ->
     case near(X,Y,X1,Y1) of
@@ -79,7 +79,7 @@ normalise(Rot,X,Y,Z,[Dx,Dy,Dz|T]) ->
 normalise(_,_,_,_,[]) ->
     [].
 
-parse([0|T], L) ->
+parse([0|_T], L) ->
     reverse(L);
 parse([H|T], L) ->
     {Stuff, T1} = fetch(3*H+1, T, []),

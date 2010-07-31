@@ -156,7 +156,7 @@ nth(L, _) when L < 1 ->
     exit({out_of_range, nth, L});
 nth(L, {LMax, _}) when L > LMax ->
     exit({out_of_range, nth, L, LMax});
-nth(L, {LMax, List}) when list(List) ->
+nth(L, {LMax, List}) when is_list(List) ->
     lists:nth(L, List);
 nth(L, {LMax, {Left = {LL, _}, Right}}) when L > LL ->
     nth(L-LL, Right);
@@ -169,9 +169,9 @@ nth(L, {_, {Left, _}}) ->
 %% e.g. append(x, [1,2,3,4]) -> [1,2,3,4,x].
 %% Returns the modified array.
 %%
-append(Line, {L, List}) when list(List), L < ?BREAK ->
+append(Line, {L, List}) when is_list(List), L < ?BREAK ->
     {L+1, List ++ [Line]};
-append(Line, {L, List}) when list(List) ->
+append(Line, {L, List}) when is_list(List) ->
     {L+1, {{L, List}, {1, [Line]}}};
 append(Line, {L, {Left = {LL1, L1}, Right}}) ->
     NewRight = append(Line, Right),
@@ -188,7 +188,7 @@ replace(Lno, _, _) when Lno < 1 ->
     exit({out_of_range, replace, Lno});
 replace(Lno, {L, _}, NewLine) when Lno > L ->
     exit({out_of_range, replace, Lno});
-replace(Lno, {L, List}, NewLine) when list(List) ->
+replace(Lno, {L, List}, NewLine) when is_list(List) ->
     {L, replace_nth(Lno, List, NewLine)};
 replace(Lno, {L, {Left={LL1, L1}, Right={LL2, L2}}}, NewLine) when Lno > LL1 ->
     NewRight = replace(Lno-LL1, Right, NewLine),
@@ -207,7 +207,7 @@ insert(Lno, _, _) when Lno < 1 ->
     exit({out_of_range, insert, Lno});
 insert(Lno, {L, _}, NewLine) when Lno > L ->
     exit({out_of_range, insert, Lno});
-insert(Lno, {L, List}, NewLine) when list(List) ->
+insert(Lno, {L, List}, NewLine) when is_list(List) ->
     if L < ?BREAK ->
 	    {L+1, insert_nth(Lno, List, NewLine)};
        true ->
@@ -236,7 +236,7 @@ insert_after(Lno, {L, _}, NewLine) when Lno > L ->
     exit({out_of_range, Lno});
 insert_after(L, {L,_}=Array, NewLine) ->
     append(NewLine, Array);
-insert_after(Lno, {L, List}, NewLine) when list(List) ->
+insert_after(Lno, {L, List}, NewLine) when is_list(List) ->
     if L < ?BREAK ->
 	    {L+1, insert_after_nth(Lno, List, NewLine)};
        true ->
@@ -263,7 +263,7 @@ delete(Lno, _) when Lno < 1 ->
     exit({out_of_range, delete, Lno});
 delete(Lno, {N_Tot, _}) when Lno > N_Tot ->
     exit({out_of_range, delete, Lno});
-delete(Lno, {N, List}) when list(List) ->
+delete(Lno, {N, List}) when is_list(List) ->
     {N-1, delete_nth(Lno, List)};
 delete(Lno, {N, {Left = {N_Left, _}, Right}}) when Lno > N_Left ->
     case delete(Lno-N_Left, Right) of
@@ -282,12 +282,12 @@ delete(Lno, {N, {Left, Right = {N_Right,_}}}) ->
 	    balance_left(N-1, NewLeft, Right)
     end.
 
-convert_to_list({_, List}) when list(List) ->
+convert_to_list({_, List}) when is_list(List) ->
     List;
 convert_to_list({L, {Left, Right}}) ->
     convert_to_list(Left) ++ convert_to_list(Right).
 
-convert_from_list(L) when list(L) ->
+convert_from_list(L) when is_list(L) ->
     lists:foldl(fun(Ln, Lsx) ->
 			append(Ln, Lsx)
 		end, new(), L).
