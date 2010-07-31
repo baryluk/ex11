@@ -1,0 +1,19 @@
+
+  To write a shell you need three widgets:
+
+  1) Text
+  2) Entry
+  3) Srollbar 
+ 
+  Data from the entry goes to the bottom
+of window.
+ 
+  This data is displayed if the sroll bar is at 
+the bottom of the window.
+
+  Widgets like this can be used for IRC chat
+programs shells, etc. 
+
+  
+
+ 

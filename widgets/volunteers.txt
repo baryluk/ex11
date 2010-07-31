@@ -1,0 +1,31 @@
+
+  The following problems need solving:
+
+  1) Closing down the server
+
+     How do I kill and window and close down the connection in an
+     orderly manner.
+
+  2) Keyboard mapping is hard coded  - I need code to get the key and sym
+     tables from the server and then apply them dynamically
+
+  3) How do I communicate with the window manager?
+
+  4) We to write lots more widgets and "mega widgets"
+
+  5) How about some proper "look and feel" - My 3D shading of
+     buttons is very primitive
+
+  6) Support for more fonts.
+
+     9x15 is hard coded in almost everywhere
+
+  7) Support for varaible width fonts
+
+  8) Make a visual erlang - see the demo code
+
+   If you feel you can make progress on any of these problems please contact
+me or mail the Erlang list.
+
+   /Joe
+

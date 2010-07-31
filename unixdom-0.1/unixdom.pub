@@ -1,0 +1,12 @@
+{author,"Scott Lystig Fritchie","fritchie@mr.net","010919"}.
+{name,"unixdom"}.
+{vsn,{0,1}}.
+{summary,"A UNIX-domain socket driver"}.
+{keywords,["UNIX-domain", "socket", "driver", "asynchronous"]}.
+{needs,[]}.
+{abstract,"This is an incomplete implementation of a UNIX-domain
+socket driver for the Erlang VM.  It was originally written while
+I was at Sendmail, Inc.  All of the major functions work, though
+the timeout-handling code is probably flaky.  Under Solaris/SPARC,
+we saw roughly a 10% improvement in bulk data throughput using
+this driver versus using TCP across the loopback interface."}.

@@ -1,0 +1,202 @@
+  About displays, screen and visuals
+
+  To start  an X  application the DISPLAY  variable must  be correctly
+set.
+
+  The default  value of DISPLAY is  usually set as follows  (in a bash
+shell)
+
+	> export DISPLAY=:0.0
+
+  The  first figure  after the  :  (0) is  the display  number -  this
+identifies which X-server the program should connect to.
+
+  Now on  most machines there will  only be ONE X-server  (number 0) -
+but we  can conceive of systems  which have more than  one X-server. I
+have *never* seen such a machine - but I suppose they might exist.
+
+  The X-server corresponding to  display N (the default) is controlled
+by  a socket on  TCP port  number 6000+N.  Thus if  you only  have one
+X-server the TCP socket number will be 6000.
+
+  One X-server can control  several different graphics cards and these
+graphics cards can be connected to one or more physical monitors.
+
+  A  particular monitor  is called  a "screen"  in  X-terminology. The
+second argument in the DISPLAY variable  (ie the M in the :N.M) is the
+screen number - this starts at zero.
+
+  If you have one graphics  card connected to one monitor there should
+only be only be one screen (number  0) - if this is not then case then
+something is fishy.
+
+  The number  of screens etc. supported  by you system can  be found by
+giving the (unix) command.
+
+    > xdpyinfo
+
+  Somewhere in the output you should see something like this:
+
+   ...
+   default screen number:    0
+   number of screens:    1
+   ...
+
+  Each screen has a number of visuals - but I won't say anything about
+these here.
+
+  When the X-server starts it creates a "default root window" for each
+of the screens that it supports.
+
+  When we  create a window the window  has to be a  sub-window of some
+previously existing window - so to open what our application considers
+to be a new top-level window we must actually open a sub-window to the
+default root window of the the screen in question.
+
+  If the parent of a window is the default root window then the window
+will be decorated with the usual title bar, kill buttons etc. that all
+top-level  windows   in  the  system   have,  otherwise  it   will  be
+undecorated.
+  
+  The top level call to create a window must thus contain the screen
+number:
+ 
+   The call to make a top level window is as follows:
+
+   xMakeWindow(Display, ParentWindow, X, Y, ...
+
+  Where ParentWindow is either a known window top or {top, Screen}
+
+  The actual window Id is computed as follows:
+
+	WinId = case ParentWindow of
+			top ->
+			    getRootWindow(Display, getDefaultScreen(Display));
+			{top, Screen} ->
+			    getRootWindow(Display, Screen);
+			Win ->
+			    Win
+		end.
+  
+   ParentWindow = getRootWindow(Display, Screen)
+		| getRootWindow(Display)         % used defualt screen
+
+  The depth of a window can always be found with:
+
+	getDepth(Window)
+
+  When a window is created we assert the fact
+
+	{winInfo, Win} = {Screen, Parent, Depth, [Id's]}
+
+  Graphics contexts
+  =================
+
+  Graphics context  are assigned per  screen (in which case  these are
+global and can be used by any window in the screen - or per-window (in
+which  case they  are automatically  de-allocated when  the  window is
+destroyed.
+
+  To create a named GC
+
+	xCreateNamedGC(Display, Name, Screen, Args)
+
+        xCreateNamedGC(Display, Name, Args) (uses default screen)
+
+	xCreateNamedGC(Display, Name, Args) ->
+	   xCreateNamedGC(Display, Name, defaultScreen(Display), Args).
+
+
+
+
+  This creates a global GC it's value can be accessed with
+
+	xGetGC(Display, {Screen, Name})
+	xGetGC(Display, Name)
+
+  The GC cannot be destroyed or changed
+
+  To manipulate a window local GC
+
+	GC = xCreateWinGC(Display, Screen, Win, Args)
+	GC = xCreateWinGC(Display, Win, Args)          (uses screen 0)
+	xChangeGC(GC, Args')                           (Chang value)
+	xDestroyGC(GC)
+
+  
+Interpretation of DISPLAY
+
+DISPLAY=":X.Y"
+
+   Means: Unix domain socket (it begins with :)
+	  X = Display number 
+	  Y = Screen number
+
+          << If you don't have support for unix domain sockets then try
+             a TCP socket port number 6000 + X >> - cheat
+
+          In Xauthenticate
+
+	xauth, list shows
+
+        enfield/unix:0  MIT-MAGIC-COOKIE-1  21b4e110c715e5441ca0624b11907c10
+
+	(enfield/unix is not actually in the xauth file)
+	
+	Protocol 256 = unix domain socket
+   
+        if :0.0 look for a 256 entry with FAMILY=256
+			                  Name = Hostname (unqualify)
+			                  ie enfield
+					  inet:gethostname().
+
+	So is Display = :0.0 then do X = inet:gethostname() 
+	and lookup the cookie for FAMILY_LOCAL (256) and X
+
+	If this is buggered Display is wrong! (or Xauthority)
+
+DISPLAY=":N" means ":N.0"
+
+DISPLAY= enfield:0.0  | localhost:0.0 | 123.56.78.54:0.0
+         foo.bar:0.0  
+
+What's in xauth? FAMILY IP ADRESS = 0
+			   and Adress = Real IP address (NOT symbolic name)
+
+So if Display = "Name:N:M" do as follows
+
+Example Display="r2d2.sics.se:10.0
+
+    inet:gethostbyname("r2d2.sics.se").
+	{ok,{hostent,"r2d2.sics.se",[],inet,4,[{193,10,66,198}]}}
+
+    then search for a cookie with IP="193.10.66.198" 	
+	                          Familiy = 0	
+			          and open port 6000 + 10
+
+	if, for example DISPLAY="enfield:10.0"  and
+	gethostbyname("enfield") yields 127.0.0.1 then it may well be
+	that your configuration is incorrect
+
+	try editing /etc/hosts
+
+	
+
+So 2> inet:gethostbyname("localhost").
+{ok,{hostent,"localhost.localdomain",
+             ["localhost","enfield"],
+             inet,
+             4,
+             [{127,0,0,1}]}}
+
+%% the following is buggered
+
+3> inet:gethostbyname("enfield").
+{ok,{hostent,"localhost.localdomain",
+             ["localhost","enfield"],
+             inet,
+             4,
+             [{127,0,0,1}]}}
+
+
+

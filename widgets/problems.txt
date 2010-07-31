@@ -1,0 +1,12 @@
+
+  Outstanding problems
+
+  1) How can I kill the top level window from within the program ?
+My forms example works - BUT evey time I kill the sever mozilla opens up
+a page to redhat ????
+
+  2) How can  I interact  with the window  manager itself? -  I'd like
+change the text in the window title. etc.
+
+
+

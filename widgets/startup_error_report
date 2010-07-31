@@ -1,0 +1,9 @@
+$DISPLAY = :0.0
+parsed display Host=none DisplayNumber=0 ScreenNumber=0
+inet:gethostname() = "enfield"
+Es
+{ip,"193.10.65.254","Code1"}
+{unix,"enfield.sics.se","Code1"}
+Try list
+{unix,0,"Code1"}
+{{ip,"localhost"},0,"Code1"}

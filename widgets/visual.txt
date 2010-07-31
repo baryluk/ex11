@@ -1,0 +1,7 @@
+   To write Visual Erlang all you need is a few buttons
+to move things around.
+
+   What you see here is the start of a simple layout program.
+
+   Volunteers are needed to extend this into a Visual programming
+   tool.

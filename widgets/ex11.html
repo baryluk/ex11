@@ -1,0 +1,769 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<head>
+<title>EX11 Notes</title>
+<meta http-equiv='Content-Type' content='text/html charset=ISO-8859-1'>
+<meta name='Author' content='Joe Armstrong'>
+<meta name='Description' content='X11 Erlang protocol binding'>
+<meta name='Keywords' content='X11,protocol,erlang'>
+<meta name='Language' content='English'>
+<link rev='made' href='mailto:joe+remove_this_spam_stopper@sics.se'>
+<style type="text/css">
+  body {margin: 2cm; text-align: justify}
+  pre { background-color: #ffcccc}
+  H1 { font-size: x-large; color: red }
+  H2 { font-size: large; color: blue }
+</style>
+</head>
+<body>
+
+<a href="#screen">[Screenshots]</a> &nbsp;  &nbsp; 
+<a href="#screen">[Download]</a> &nbsp;  &nbsp;
+<a href="#home">[Home]</a> &nbsp;  &nbsp;
+<a href="#volun">[Volunteers]</a> &nbsp;  &nbsp;
+<a href="#design">[Design]</a> &nbsp;  &nbsp;
+
+
+<a name="home"></a>
+<h1>EX11</h1>
+
+  <p>EX11 is an  X windows graphics system for  Erlang.  With EX11 you
+can  easily  program  complex   GUIs.   EX11  models  all  widgets  as
+concurrent processes - this results in extrememly compact GUI programs
+which are very  simple to program and understand.   <p>EX11 is written
+in 100% Erlang and talks <i>directly</i> to the X server.
+
+  <p>EX11  has a  two parts  - a  low-level library  which is  used to
+communicate with the X-server and a high level widget set intended
+for GUI programming.
+
+<p>Using the widget set (sw = "simple widgets") is very easy.
+Writing your own widgets is easy - modifying the X-divers is less easy.
+
+<ul>
+<li><a href="#tut">Widget tutorial</a> How to use the widgets.
+<li><a href="#tutwrite">How to write a widget</a>
+<li><a href="#lowLevel">ex11_lib</a> the low level interface to X-11.
+<li><a href="#hello_world">hello world</a> using the low-level routines.
+<li><a href="#hello_buttons">simple buttons</<> using the low-level interface</a>
+<li><a href="#active">Active widgets</a> How to write an active widget
+with its own thread of control - for example, the clock widget.
+<li><a href="#ref">Reference</a> Widget refence
+<li><a href="#generic">Generics</a> the generic protocol.
+<li><a href="#screen">Screenshots</a> Screen shots of all the examples.
+<li><a href="#philosophy">Philosophy</a>
+<li><a href="#down">Download</a>
+<li><a href="#credits">Credits</a>
+</ul>
+
+<a name="design"></a>
+<h2>Design</h2>
+
+<ul>
+<li>Every widget you see on the screen is a process.
+<li>To tell a Widget to do something you sent it a message,
+for example:
+<pre>
+Label ! {set, "text"}
+</pre>
+<li>To get information from a widget you do a remote procedure
+call, for example:
+<pre>
+Val = rpc(Entry, read)
+</pre>
+</ul>
+
+<a name="download">
+<h1>Download</h1>
+<p><a href="../download">
+This directory contains the latest stable release and
+daily (unstable) updates.
+
+<a name="screen">
+<h1>Screenshots</h1>
+
+<a name="screen">
+
+<h1>Screenshots</h1>
+<ul>
+<li><a href="#ex0">Master menu</a>
+<li><a href="#ex1">Button</a>
+<li><a href="#ex2">Button and label</a>
+<li><a href="#ex3">Entries 1</a>
+<li><a href="#ex4">Entries 2</a>
+<li><a href="#ex5">Scrollbars</a>
+<li><a href="#ex6">Progress bar</a>
+<li><a href="#ex8">Text display 1</a>
+<li><a href="#ex9">Text display 2</a>
+<li><a href="#ex10">A shell</a>
+<li><a href="#ex11">Layout control</a>
+<li><a href="#ex12">Forms</a>
+<li><a href="#ex13">Draggable frames</a>
+<li><a href="#ex14">Draggable objects</a>
+<li><a href="#ex16">Pop up menus - flash buttons</a>
+<li><a href="#ex17">Animation</a>
+<li><a href="#ex18">Color picker</a>
+<li><a href="#ex22">Clock</a>
+<li><a href="#ex23">Canvas</a>
+</ul>
+
+<a name="ex0"></a>
+<p><a href="example0.jpg"><img height=100 src="example0.jpg"></a>
+<p><a href="example0.erl">example0.erl</a>
+is the main program which launches all the other examples.
+<hr>
+
+<a name="ex1"></a>
+<p><img src="example1.jpg">
+<p><a href="example1.erl">example1.erl</a> shows how to make a simple
+<a href="#swButton">button</a>.
+<hr>
+
+<p>Master menu:
+<p><a href="example0.jpg"><img height=100 src="example0.jpg"></a>
+<p><a href="example0.erl">example0.erl</a>
+<hr>
+
+
+<p><img src="example1.jpg">
+<p>A simple button.
+<p><a href="example1.erl">example1.erl</a>
+<hr>
+
+<a name="ex2"></a>
+<p>A label which changes when you hit the button.
+<p><img src="example2.jpg"></a>
+
+  <p><a href="example2.erl">example2.erl</a>  has a simple
+<a href="#swButton">button</a> and a
+<a href="#swLabel">label</a>.  When you  click on  the button  the position  of  the mouse
+  pointer is written into the label.
+
+<hr>
+<a name="ex3"></a>
+<p>Entries. The text is swapped when you hit the button.
+
+<p><img src="example3.jpg">
+
+  <p><a href="example3.erl">example3.erl</a> Is made from two editable
+<a href="#swEntry">entries</a> and two 
+<a href="#swLabel">labels</a>
+and a <i>swap</i> <a href="#swButton">button</a>. When the swap putton is pressed the contents
+of the two entries is interchanged.
+
+<hr>
+
+<a name="ex4"></a>
+<p>Entry. When you hit CR the label is changed.
+<p><img src="example4.jpg">
+
+  <p><a href="example4.erl">example4.erl</a>  shows how to  enable the
+  <i>carriage       return</i>        event       in       an       <a
+  href="#swEntry">entry</a>.   When   carrage  return   is
+  pressed in the entry the entry is read and the contents of the entry
+  is written to the <a href="#swLabel">label</a>.
+
+
+<hr>
+<p><img src="example4.jpg">
+<p><a href="example4.erl">example4.erl</a>
+
+<hr>
+<a name="ex5"></a>
+<p><img  src="example5.jpg"></a>
+
+  <p><a  href="example5.erl">example5.erl</a>  shows  how  to  make  a
+  horizontal           and           a           vertical           <a
+  href="#swScrollbar">scrollbar</a>.   When  the
+  object in the scrollbar is dragged a function is evaluated.
+
+
+<hr>
+
+<p>Scrollbars.
+<p><img  src="example5.jpg"></a>
+<p><a href="example5.erl">example5.erl</a>
+
+<hr>
+<a name="ex6"></a>
+<p><img src="example6.jpg"></a>
+
+<p><a href="example6.erl">example6.erl</a> illustrates the use of
+a <a href="#swProgressBar">progress bar</a>. When the red blob is dragged the blue blob moves to the left or right. When the brown blob is
+movved the size of the blue blob is changed.
+
+
+<hr>
+<p><img src="example7.jpg"></a>
+<p><a href="example7.erl">example7.erl</a>
+ is another example of the  <a href="#swScrollbar">scrollbar</a>.
+
+<hr>
+
+<p>Progress bar.
+<p><img src="example6.jpg"></a>
+<p><a href="example6.erl">example6.erl</a>
+
+<hr>
+<a name="ex8"></a>
+<p><a href="example8.jpg"><img height=100 src="example8.jpg"></a>
+<p><a href="example8.erl">example8.erl</a> shows how to use a 
+a <a href="#swText">text display widget</a>.
+
+<p>The text display widget displays a file staring at a given line in the file.
+The start line can be changed by dragging on a  <a href="#swScrollbar">scrollbar</a> or by pressing on one of the three buttons at the bootom of the frame.
+
+
+<hr>
+<a name="ex9"></a>
+<p><a href="example9.jpg"><img height=100 src="example9.jpg"></a>
+<p><a href="example9.erl">example9.erl</a>
+
+<hr>
+
+<p>Text display widget.
+<p><a href="example8.jpg"><img height=100 src="example8.jpg"></a>
+<p><a href="example8.erl">example8.erl</a>
+
+<hr>
+<a name="ex9"></a>
+<p>File display.
+<p><a href="example9.jpg"><img height=100 src="example9.jpg"></a>
+<p><a href="example9.erl">example9.erl</a>
+
+<hr>
+<a name="ex10"></a>
+<p><a href="example10.jpg"><img height=100 src="example10.jpg"></a>
+<p><a href="example10.erl">example10.erl</a>
+
+<hr>
+<a name="ex11"></a>
+<p>Interactive layout control.<p><a href="example11.jpg"><img height=100 src="example11.jpg"></a>
+<p><a href="example11.erl">example11.erl</a>
+
+<hr>
+<hr>
+<a name="ex11"></a>
+<p>Interactive layout control.
+<p><a href="example11.jpg"><img height=100 src="example11.jpg"></a>
+<p><a href="example11.erl">example11.erl</a>
+
+<hr>
+<a name="ex12"></a>
+<p><a href="example12.jpg"><img height=100 src="example12.jpg"></a>
+<p><a href="example12.erl">example12.erl</a>
+
+<hr>
+<a name="ex13"></a>
+<p>Draggable frames.
+
+<p><a href="example13.jpg"><img height=100 src="example13.jpg"></a>
+<p><a href="example13.erl">example13.erl</a>
+
+
+<hr>
+
+<a name="ex14"></a>
+<p>Draggable objects.
+<p><a href="example14.jpg"><img height=100 src="example14.jpg"></a>
+<p><a href="example14.erl">example14.erl</a>
+
+
+<hr>
+<a name="ex16"></a>
+<p>Pop up menus.
+<p><a href="example16.jpg"><img height=100 src="example16.jpg"></a>
+<p><a href="example16.erl">example16.erl</a>
+
+<hr>
+<a name="ex17"></a>
+<p>Animation.
+<p><a href="example17.jpg"><img width=200 src="example17.jpg"></a>
+<p><a href="example17.erl">example17.erl</a>
+
+<hr>
+<a name="ex18"></a>
+<p>Color picker.
+<p><a href="example18.jpg"><img height=100 src="example18.jpg"></a>
+<p><a href="example18.erl">example18.erl</a>
+
+
+<hr>
+<a name="ex22"></a>
+<p>Clock.
+<p><a href="example22.jpg"><img height=100 src="example22.jpg"></a>
+<p><a href="example22.erl">example22.erl</a>
+
+
+<hr>
+<a name="ex23"></a>
+<p>Clock.
+<p><a href="example23.jpg"><img height=100 src="example23.jpg"></a>
+<p><a href="example23.erl">example23.erl</a>
+
+
+<a name="volun"></a>
+
+<h2>Volunteers</h2>
+
+<p>Volunteers are needed to write:
+
+<ul>
+<li> More Widgets
+<li> Visual Erlang
+</ul>
+
+
+<a name="tut"></a>
+<h1>Tutorial</h1>
+
+<p>To see how the widget library is called I'll start with a very simple
+example. I'm going to make what looks like a "window". 
+
+<h2>Creating a draggable window</h2>
+<p><img src="fig1.jpg">
+<p>A window can be simply made by composing two primitive widgets,
+a <a href="#swDragBox">DragBlob</a> and a <a href="#swRectangle">Rectangle</a>.
+The code do do this is:
+<pre>
+DragBar   = swDragBox  :make(Win, XX, YY,    260, 10, 1,?blue),
+Rectangle = swRectangle:make(Win, XX, YY+16, 260, 200,1,?white),
+DragBar ! {onMove, fun(X, Y) ->
+			     Rectangle ! raise,
+			     Rectangle ! {setXY, X, Y+16}
+		     end}
+</pre>
+<p>This code make something that looks pretty much like
+a regular window, only I have separated
+the border from the frame so that you can clearly see that there are two
+separate widgets.
+<p>The line of code:
+<pre>
+DragBar ! Msg
+</pre>
+<p>Sends an asynchronous message to the DragBar. The message is:
+<pre>
+{onMove, Fun}
+</pre>
+<p>This means "when the Dragbar is moved to the position <tt>X,Y</tt>
+evaluate the function <tt>Fun(X, Y)</tt>".
+<p><tt>Fun</tt> is the function:
+<pre>
+fun(X, Y) ->
+     Rectangle ! raise,
+     Rectangle ! {setXY, X, Y+16}
+end
+</pre>
+<p>This sends two messages to <tt>Rectangle</tt>. The message 
+<tt>raise</tt> pops the window to
+the top of the display stack, in case it was obscured. The message 
+<tt>{setXY, X, Y}</tt> moves the window to the position <tt>X, Y</tt>.
+
+<p>That's all that's needed - three lines of code.
+Now when you drab the blue bar the frame will obediently follow all motions
+of the border bar.
+
+<p>By <i>reducing</i> the gap between the border and the frame the compound
+object will look and behave like a regular window.
+
+<hr>
+
+<p>The drag frame example needs a little extra code to get it started. We need
+to connect to the X server and create a top-level window:
+<pre>
+start() -> spawn(fun win/0).
+
+win() ->
+    Display = xStart("3.2"), %% use version 3.2 of the libraries
+    Win     = swTopLevel:make(Display, 400, 250, ?bg),
+    ... code as before ...
+    loop().
+
+loop() ->
+    receive
+       Any ->
+	    io:format("received:~p~n",[Any]),
+	    loop()
+    end.
+</pre>
+
+  <p><font  color="red">All windows  must be  controlled by  their own
+  processes</font> - thus  we spawn off a process  to control the window.
+  The process goes  into an infinite loop (don't  worry about this for
+  now) - If  this process dies then any  widgets, windows etc. created
+  by the widget will be destroyed.
+
+<p>The complete code for this is in <a href="example19.erl">example19.erl</a>
+
+
+<h2>Creating a shell</h2>
+
+<p><img src="fig2.jpg">
+<p>We can make a shell by combining three primitive widgets. 
+<a href="#scroll">swScrollbar</a>, <a href="#swText">swText</a> and
+<a href="#swEntry">swEntry</a>.
+<p>The code to do make this looks like this:
+<pre>
+Win   = swTopLevel:make(Display, Width, Ht, ?bg),
+Text  = swText:make(Win, 10, 10, Width-50, Ht-70, ?AntiqueWhite, 
+                    {file, "shell.txt"}),	 
+Scroll  = swScrollbar:make(Win, Width-30, 10, 20, Max=Ht - 72,0,
+			   ?blue,?white),
+Text  ! {set,100000},
+Entry = swEntry:make(Win, 10, Ht-40, Width-20, "Enter stuff here > "),
+Entry ! {onReturn,
+           fun(Str) ->
+	     Text  ! {addStr,Str},
+	     Entry ! {set, ">"}
+	   end}
+</pre>
+
+  <p>Firstly we create an entry a text display widget and a scrollbar.
+<p>Then we  send a  <tt>Text ! {set,100000}</tt>  to the  text widget.
+<tt>{set, N}</tt> means skip N lines  at the start of the text that is
+being  displayed and  show my  the rest  of the  file. Setting  a large
+number (like 100000) means skip 100000 lines and then display the rest
+of the file - Executing this has the effect of always displaying the
+"end" of the file.
+<p>I have enabled the <tt>onReturn</tt> event in the entry.
+When a carriage return is pressed in the entry, the code:
+<pre>
+fun(Str) ->
+    Text  ! {addStr,Str},
+    Entry ! {set, ">"}
+end.
+</pre>
+
+<p>Is evaluated, where <tt>Str</tt> is the
+content of the entry. An <tt>{addStr, Str}</tt> message to the Text widget
+appends <tt>Str</tt> to the end of the file. A <tt>Entry ! {set, ">"}</tt>
+message to the entry sets the text in the entry to <tt>&gt;</tt>.
+
+<p>So far this code will track any data that is sent to the text widget.
+If the user adjusts the scrollbar to see "earlier" data in the file
+a <tt>{set, N}</tt> message is sent to the text widget.
+
+<p>If the latest additions to the text are "off screen" they will not be
+seen.
+
+<p>To achieved this effect we have to "join" the scrollbar and the text
+widget. This is done as follows:
+<pre>
+join(Text, ScrollBar, Max) ->
+    {MaxHt, MaxLines} = rpc(Text, size),
+    A = (MaxLines -  MaxHt)/Max,
+    ScrollBar ! {onMove,
+		 fun(I) ->
+			 if 
+			     I >= Max ->
+				 Text ! {set, 1000000};
+			     true ->
+				 Text ! {set, trunc(A*I)}
+			 end
+		 end}.
+</pre>
+  <p>When  the  scrollbar  is   moved  to  position  <tt>I</tt>,  then
+<tt>Fun(I)</tt> is evaluated. <tt>I</tt> is  an integer in the range 1
+to Max.   Where Max is the  longest dimension of  the scrollbar.  This
+integer from  1 to max  is used to  calculate the offset in  the text
+window.  When I is >= Max we want to set the offset in the text widget
+to a very large value. MaxHt is the number of screen lines of the text
+widget and MaxLines  is the total number of lines  in the text widget.
+<p><i>This code  is actually buggy  since as we  add new code  to the
+text widget  we should increase MaxLines  by one every time  we add a
+new line.</i>.
+
+<p>The complete code for this is in <a href="example10.erl">example10.erl</a>.
+
+<a name="ref"></a>
+<h1>The Standard Widgets</h1>
+<ul>
+<li>Note1: All widgets implement the <a href="#generic">generic prototocl</a>
+<li>Note2: <tt>Pid !! Msg</tt> is syntactic sugar for "Remote proceedure call" - in the code you must write <tt>sw:rpc(Pid, Msg)</tt>
+</ul>
+
+<li><a href="#swButton">swButton</a> - a 3-D button.
+<li><a href="#swCanvas">swCanvas</a> - a graphics canvas.
+<li><a href="#swClock">swClock</a> - a analogue clock.
+<li><a href="#swDragBox">swDragBox</a> - a draggable, makes a blob which can be dragged round the screen.
+
+<li><a href="#swEntry">swEntry</a> - a editable text entry.
+
+<li><a href="#swFlashButton">swFlashButton</a> - a "flash" button, not 3D used in
+pop up menues etc.
+
+<li><a href="#swLabel">swLabel</a> - text widget widget.
+
+<li><a href="#swProgressBar">swProgressBar</a> - progress bar.
+
+<li><a href="#swRectangle">swRectangle</a> - a colored rectangle.
+Can be used as a container frame.
+<li><a href="#swScrollbar">swScrollbar</a> - a scrollbar.
+<li><a href="#swText">swText</a> - text wisplay widget.
+<li><a href="#swTopLevel">swTopLevel</a> - top level window.
+
+</ul>
+
+<a name="swButton"></a>
+<h2>swButton</h2> 
+<p>A 3-D button.
+<p>Creation:
+<tt>swButton:make(Parent, X, Y, Width, Ht, Color, Str)</tt>
+<p>Private protocol:
+<ul>
+<li> <tt>Button ! {onClick, Fun/1}</tt> <br>Evaluate <tt>F(X)</tt> when 
+clicked.
+ <tt>X</tt> is the mouse position.
+<li> <tt>Button ! {set, Str}</tt><br>Change the text in the button
+</ul>
+<p>Implementation: <a href="swButton.erl">swButton.erl</a>
+
+
+<a name="swClock"></a>
+<h2>swClock</h2> 
+<p>Am analogue clock.
+<p>Creation:
+<tt>swClock:make(Parent, X, Y, Width, Ht, Color)</tt>
+<p>Private protocol:
+<ul>
+
+
+<a name="swDragBox"></a>
+<h2>swDragBox</h2> - a draggable, makes a blob which can be dragged round the screen.
+
+<p>Creation:
+<tt>swDragBox:make(Parent, X, Y, Width, Height, Border, Color)</tt>
+<p>Private protocol:
+<ul>
+<li> <tt>Entry ! {onMove, F/2}</tt> <br>Evaluate when 
+<tt>F(X,Y)</tt> dragged to
+position <tt>(X,Y)</tt>.
+</ul>
+<p>Implementation: <a href="swDragBox.erl">swDragBox.erl</a>
+
+<a name="swEntry"></a>
+<h2>swEntry</h2> - a editable text entry.
+<p>Creation:
+<tt>swEntry:make(Parent, X, Y, Width, Str)</tt>
+<p>Private protocol:
+<ul>
+<li> <tt>Entry ! {onReturn, Fun/1}</tt> <br>Evaluate F(Str) when return
+is pressed in the entry.
+<li> <tt>Entry ! {set, Str}</tt><br>Change the text in the entry
+<li> <tt>Entry !! read</tt><br>Read the entry
+</ul>
+<p>Implementation: <a href="swEntry.erl">swEntry.erl</a>
+
+<a name="swFlashButton"></a>
+<h2>swFlashButton</h2> - a "flash" button, not 3D used in
+pop up menues etc.
+<p>Creation:
+<tt>swFlashButton:make(Parent, X, Y, Width, Ht, Border, Color1, Color2, Str)</tt>
+<p>Private protocol:
+<ul>
+<li> <tt>FlashButton ! {onClick, F/1}</tt> <br>Evaluate F(X) when return
+is pressed in the button. <tt>X</tt> is the mouse position.
+<li> <tt>FlashButton ! {onEnter, F/0}</tt><br>Evaluate F() then the pointer enters the button.
+
+<li> <tt>FlashButton ! {onLeave, F/0}</tt><br>Evaluate F() then the pointer enters the button.
+
+</ul>
+<p>Implementation: <a href="swFlashButton.erl">swFlashButton.erl</a>
+
+<a name="swLabel"></a>
+<h2>swLabel</h2> - text widget widget.
+<p>Creation:
+<tt>swLabel:make(Parent, X, Y, Width, Ht, Border, Color, Str)</tt>
+<p>Private protocol:
+<ul>
+<li> <tt>Label ! {set, Str}</tt> <br>Change label to <tt>Str</tt>
+</ul>
+<p>Implementation: <a href="swLabel.erl">swLabel.erl</a>
+
+<a name="swProgressBar"></a>
+<h2>swProgressBar</h2> - progress bar.
+<p>Creation:
+<tt>swProgressBar:make(Parent, X, Y, Width, Ht, Border, Color1, Color2)</tt>
+<p>Private protocol:
+<ul>
+<li> <tt>ProgressBar ! {setX, X}</tt> <br>Set the start of the progress indicator to <tt>X</tt>.
+<li> <tt>ProgressBar ! {setW, W}</tt> <br>Set the width of the progress indicator to <tt>W</tt>.
+</ul>
+
+<p>Implementation: <a href="swProgressBar.erl">swProgressBar.erl</a>
+
+<a name="swRectangle"></a>
+<h2>swRectangle</h2> - a colored rectangle.
+Can be used as a container frame.
+<p>Creation:
+<tt>swRectangle:make(Parent, X, Y, Width, Ht, Border, Color)</tt>
+<p>Private protocol:<br>
+None - this is merely a container - it dows however, respond to the
+<a href="#generic">generic prototcol</a>
+<p>Implementation: <a href="swRectangle.erl">swRectangle.erl</a>
+
+
+<a name="swScrollbar"></a>
+<h2>swScrollbar</h2> - a scrollbar.
+<p>Creation:
+<tt>swScrollbar:make(Parent, X, Y, Width, Ht, Border, Color1, Color2)</tt>
+<p>Private protocol:
+<ul>
+<li> <tt>Scrollbar ! {onMove, F/1}</tt> <br>When moved to <tt>X</tt> the function <tt>F(X)</tt> will be evaluated. <tt>X</tt> is in the range 1 to <tt>max(Width, Ht)</tt>.
+</ul>
+<p>Implementation: <a href="swScrollbar.erl">swScrollbar.erl</a>
+
+<a name="swText"></a>
+<h2>swText</h2> - text display widget.
+<a name="swText"></a>
+<p>Creation:
+<tt>swText:make(Parent, X, Y, Width, Ht, Color, Data)</tt> where
+<tt>Data</tt> is <tt>{file, F}</tt> or <tt>{str, S}</tt>.
+
+<p>Private protocol:
+<ul>
+
+  <li> 
+<tt>Text !  {set, N}</tt>  <br>Adjust the display so as to skip
+<tt>N</tt> lines  from the top of  the text to be  displayed. Once set
+the   text  widget   will   malways  skip   this   number  of   lines.
+<tt>{set,0}</tt> displays the top of the file. 
+
+  <p>Setting <tt>N</tt> to a very large number, for example, <tt>{set,
+1000000000}</tt> displays the  end of the file. If  additional data is
+added to the file, then the tail of the file will always be displayed.
+
+
+<li> <tt>Text ! {addStr, Str}</tt><br>Add <tt>Str</tt> to the end of the text file.
+</ul>
+<p>Implementation: <a href="swText.erl">swText.erl</a>
+
+
+
+<a name="swTopLevel"></a>
+<h2>swTopLevel</h2> - top level window.
+<p>Creation:
+<tt>swTopLevel:make(Parent, Width, Ht, Color)</tt>
+<p>Private protocol:
+<ul>
+<li> <tt>TopLevel ! {onClick, F/1}</tt> <br>Evaluate <tt>F(X)</tt>
+if the mouse is clicked in the window. <tt>X</tt> is the mouse position.
+</ul>
+
+<p>Implementation: <a href="swTopLevel.erl">swTopLevel.erl</a>
+
+<a name="generic"></a>
+<h1>The Generic protocol</h1>
+<p>All widgets should implement the following generic protocol.
+<a href="#2">[2]</a>
+<ul>
+<li><tt>Widget !! display</tt> - 
+Return the <tt>Pid</tt> of the </tt>Display</tt>.
+
+<li><tt>Widget !! mountPoint</tt> -
+Return the <a href="#1">mount point</a> of the widget.
+
+<li><tt>Widget ! raise</tt> - Raise the widget - ie move it above any other 
+widgets on the screen.
+
+<li><tt>Widget ! {setXY, X, Y}</tt> -
+Move the widget to <tt>X,Y</tt>.
+
+<li><tt>Widget ! {up, N}</tt> - obvious ...
+<li><tt>Widget ! {down, N}</tt>
+<li><tt>Widget ! {left, N}</tt>
+<li><tt>Widget ! {right, N}</tt>
+<li><tt>Widget ! {right, N}</tt>
+<li><tt>Widget ! {wider, N}</tt>
+<li><tt>Widget ! {narrower, N}</tt>
+<li><tt>Widget ! {taller, N}</tt>
+<li><tt>Widget ! {shorter, N}</tt>
+<li><tt>Widget ! map</tt> 
+<li><tt>Widget ! unmap</tt>
+
+<li><tt>Widget !! winfo</tt> -
+Return a <tt>#win</tt> data struture describing the widget.
+</ul>
+
+<p>Using the widget set (sw = "simple widgets") is very easy.
+Writing your own widgets is easy - modifying the X-divers is less easy.
+
+<a name="volun"></a>
+<h2>Volunteers</h2>
+
+<p>Volunteers are needed to write:
+
+<ul>
+<li> More Widgets
+<li> Visual Erlang
+<li> Code to handle anti-aliased fonts
+<li> Code for the X-render extensions. It would be nice to make
+"alpha-blended" ie semi-transparent windows
+</ul>
+
+<a name="design"></a>
+<h2>Design</h2>
+
+<ul>
+<li>Every widget you see on the screen is a process.
+<li>To tell a Widget to do something you sent it a message,
+for example:
+<pre>
+Label ! {set, "text"}
+</pre>
+<li>To get information from a widget you do a remote procedure
+call, for example:
+<pre>
+Val = Entry !! read
+</pre>
+</ul>
+
+  <p><font color="red">!! is  an infix RPC operator.
+In the code this is written sw:rpc(Process, X)
+hopefully this operator will find itself in standard Erlang
+before too long :-)</font>
+<p><a href="example14.jpg"><img height=100 src="example14.jpg"></a>
+<p><a href="example14.erl">example14.erl</a>
+
+
+<a name="down">
+<h1>Download</h1>
+<p><a href="../download">This directory</a> contains the latest stable release and
+daily (unstable) updates.
+
+<a name="bugs">
+<h1>Known bugs</h1>
+
+<p>Color management on non 24 bit Truecolor monitors is known to be incorrect.
+
+
+<h1>Notes</h1>
+
+
+<a name="1"></a>
+<p>
+  [1] The "mount point of a widget  is a point to which sub-widgets may
+ be attached. Usually a widget has one top-level widget, in which case
+ this  widget is  the mount  point.  If the  widget controls  several
+ top-level windows  then the widget controlling process  will have to
+ choose which of these widget is an appropriate mount point.
+
+
+<a name="2"></a>
+<p>
+[2] The generic protocol is implemented in <tt>sw:generic/3</tt>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

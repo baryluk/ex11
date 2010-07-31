@@ -1,0 +1,52 @@
+-module(fontSelect).
+
+query(Foundary, Name, Weight, Slant, SetWidth, AdditionalStyle,
+		PixelSize, PointSize, DitcPerInchX,
+		DotsPerInchY,
+		Spacing,
+		CharacterCell,
+		AverageWidth,
+		Registry).
+
+%%  Some of  the multi-part names are  quite long. These  names follow a
+%%  standard called X Logical Font Description, or XLFD.
+%%
+%%  Each part  of an XLFD name  is separated by  a hyphen. If a  part is
+%%  missing,  you'll  see  two  hyphens  in  a row.  You  can  also  use
+%%  wildcards, such as * for fields you don't care about.
+%%
+%%  Going in order, from left to right, the fields follow:
+%%
+%%-macromedia-ikarus-medium-r-normal--0-0-0-0-p-0-ascii-0
+%% Foundary   Name   Weight S SW     aP K D J L A C
+%%		   bold
+%%		   medium
+%%
+%%S = Slant = 
+%%i 	Italic
+%%o 	Oblique
+%%r 	Roman
+%%ri 	Reverse Italic
+%%ro 	Reverse Oblique
+%%ot 	
+%%
+%%SW = Set width =? normal | condensed
+%%Additional style = sanns
+%%P = pixel size = Height in pixels of characters
+%%K = Point size * 10 (120 = twelve point etc)
+%%D,J = dots per inch (75 or 100 usually) can be ignored
+%%L=spacing
+%%	c 	Character-cell/monospaced
+%%m 	Monospaced
+%%p 	Proportional
+%%
+%%A = 10 * average width in pixels
+%%
+%%C = charset registry 
+%%
+%%iso8859-1 	Western Europe
+%%hp-roman8 	Western Europe (Hewlett-Packard only)
+%%iso8859-2 	Eastern Europe
+%%ksc5601.1987-0 	Korean
+%%jisx0208.1983-0 	Japanese
+

@@ -1,0 +1,10 @@
+
+   1) Make resizing work in swEmaces and
+      put the changes into swSelect
+
+   2) Change the entry code to use swEmacs
+
+   3) Change the textdisplay widget code to use
+      emacs
+ 
+   4) Fix this bug (ie stuff below me)

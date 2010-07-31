@@ -1,0 +1,34 @@
+
+   
+   swEmacs => The Emacs widget
+
+   swEmacs is a microscopic implementation of "Emacs in a box"
+
+   The following keys work
+
+   ^A = Beginning of line
+   ^E = End of line
+   ^D = Delete character in front of cursor
+   ^B = Backwards character
+   ^F = Forwards character
+
+   PgUp and PgDown scoll the buffer.
+
+   The arrow keys do what they are supposed to.
+
+   Character insertions and deletions work as they are supposed to.
+
+   Resizeing the window is currently broken (so don't try to do this)
+
+   To create a text editor
+
+      Emacs = swEmacs:make(Win, X, Y, Width, Ht, 1, ?white),
+
+   Width and Height are in units of characters
+
+   Then do
+
+      Emacs ! {edit, F}
+
+   To edit the file F
+
